@@ -1,0 +1,54 @@
+<launch>
+    
+    <!-- Setting the default value to 1 of argument to simulation phase-->
+    <arg name="simulate_with_turtlesim" default="1" />
+
+    <param name="simulate_with_turtlesim" value="$(arg simulate_with_turtlesim)" />
+
+    <!-- default value = 1, the arguments holds true, hence entering simulation phase -->
+    <group if="$(arg simulate_with_turtlesim)">
+
+        <!-- To spawn two instances of turtlesim, one for turtlesim_node_leader  and turtlesim_node_follower-->
+        <node name="turtlesim_node_leader" pkg="turtlesim" type="turtlesim_node" required="true" />
+        <node name="turtlesim_node_follower" pkg="turtlesim" type="turtlesim_node" respawn="true" />
+
+        <!--To run the drive_positive_v_w node-->
+        <node name="drive_positive_v_w" pkg="varsha_vagheesan_final_2022" type="drive_positive_v_w.py" />
+
+        <!-- To open the rqt_graph -->
+        <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" />
+        <node name="velocity_reporter" pkg="varsha_vagheesan_final_2022" type="velocity_reporter.py" output="screen" launch-prefix="xterm -e">
+            <!-- <remap from="turtle1/cmd_vel" to="cmd_vel" /> -->
+        </node>
+    </group>
+
+    <!--Argument simulation phase value is not 1, hence executing the non simulation phase-->
+    <group unless="$(arg simulate_with_turtlesim)">
+        <!--Setting the default values of x_tbot3 and y_tbot3-->
+        <arg name="x_tbot3" default="5" />
+        <arg name="y_tbot3" default="5" />
+        
+        <!--Turtlebot3 is spawned in gazebo and is launched-->
+        <include 
+        file="$(find turtlebot3_gazebo)/launch/turtlebot3_empty_world.launch">
+            <!--model type is set to burger-->
+            <arg name="model" value="burger" />
+            <!--arguments being called-->
+            <arg name="x_pos" value="$(arg x_tbot3)" />
+            <arg name="y_pos" value="$(arg y_tbot3)" />
+        </include>
+        <!--To run the drive_negative_v_w node-->
+        <node name="drive_negative_v_w" pkg="varsha_vagheesan_final_2022" type="drive_negative_v_w.py" >
+        </node> 
+        
+        <!--To run the velocity_reporter node-->
+        <node name="velocity_reporter" pkg="varsha_vagheesan_final_2022" type="velocity_reporter.py" output="screen" launch-prefix="xterm -e">
+        </node>
+        <!-- To open the rqt_graph -->
+        <node name="rqt_graph" pkg="rqt_graph" type="rqt_graph" />
+    </group>
+</launch>
+
+
+
+ 

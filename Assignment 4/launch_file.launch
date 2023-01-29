@@ -1,0 +1,25 @@
+<launch>
+    <!-- sensed_object node-->
+    <!-- Setting node name, pkg_name and type names appropriately w.r.t the sensed_object.py and its path -->
+    <node name="sensed_object" pkg="assignment4_pkg" type="sensed_object.py" />
+    <!-- drive_robot node -->
+    <!-- Setting node name, pkg_name and type names appropriately w.r.t the drive_robot.py and its path -->
+    <node name="drive_robot" pkg="assignment4_pkg" type="drive_robot.py" required="true" />
+    <!--data_reporter node -->
+    <!-- Setting node name, pkg_name and type names appropriately w.r.t the data_reporter.py and its path -->
+    <node name="data_reporter" pkg="assignment4_pkg" type="data_reporter.py" output="screen" launch-prefix="xterm -e" />
+    
+    <!--Setting the x_pos, y_pos and world_name values-->
+    <arg name="turtlebot3" default="true" />
+    <!-- <arg name="z_pos" default="0" /> -->
+    <arg name="world_name" default="empty.world" />
+    
+    <!--gazebo launch -->
+    <include 
+      file="$(find turtlebot3_gazebo)/launch/turtlebot3_empty_world.launch">
+    </include>
+     
+    <!-- Run rosrun rqt_graph rqt_graph -->
+    <node name="rqt_graph"  pkg="rqt_graph" type="rqt_graph" />
+  
+</launch>
